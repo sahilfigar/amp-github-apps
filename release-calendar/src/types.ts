@@ -22,6 +22,7 @@ export enum Channel {
   OPT_IN_BETA = 'opt-in-beta',
   OPT_IN_EXPERIMENTAL = 'opt-in-experimental',
   NIGHTLY = 'nightly',
+  ROLLBACK = 'rollback',
 }
 
 export class Release {
