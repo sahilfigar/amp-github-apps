@@ -21,10 +21,7 @@ import {ApiService} from '../api-service';
 import {Channel} from '../../types';
 import {EventApi, View} from '@fullcalendar/core';
 import {EventSourceInput} from '@fullcalendar/core/structs/event-source';
-import {
-  getAllReleasesEvents,
-  getSingleReleaseEvents,
-} from '../models/release-event';
+import {getAllReleasesEvents} from '../models/release-event';
 import FullCalendar from '@fullcalendar/react';
 import ReactDOM from 'react-dom';
 import Tippy from '@tippyjs/react';
@@ -36,12 +33,10 @@ const EVENT_LIMIT_DISPLAYED = 3;
 
 export interface CalendarProps {
   channels: Channel[];
-  singleRelease: string;
 }
 
 export interface CalendarState {
-  allEvents: Map<Channel, EventSourceInput>;
-  singleEvents: EventSourceInput[];
+  events: Map<Channel, EventSourceInput>;
 }
 
 export class Calendar extends React.Component<CalendarProps, CalendarState> {
@@ -50,28 +45,14 @@ export class Calendar extends React.Component<CalendarProps, CalendarState> {
   constructor(props: Readonly<CalendarProps>) {
     super(props);
     this.state = {
-      allEvents: new Map<Channel, EventSourceInput>(),
-      singleEvents: [],
+      events: new Map<Channel, EventSourceInput>(),
     };
     this.apiService = new ApiService();
   }
 
   async componentDidMount(): Promise<void> {
     const releases = await this.apiService.getReleases();
-    this.setState({allEvents: getAllReleasesEvents(releases)});
-  }
-
-  async componentDidUpdate(prevProps: CalendarProps): Promise<void> {
-    if (prevProps.singleRelease != this.props.singleRelease) {
-      if (this.props.singleRelease != null) {
-        const release = await this.apiService.getRelease(
-          this.props.singleRelease,
-        );
-        this.setState({singleEvents: getSingleReleaseEvents(release)});
-      } else {
-        this.setState({singleEvents: []});
-      }
-    }
+    this.setState({events: getAllReleasesEvents(releases)});
   }
 
   tooltip = (arg: {
@@ -98,13 +79,9 @@ export class Calendar extends React.Component<CalendarProps, CalendarState> {
   };
 
   render(): JSX.Element {
-    const displayEvents: EventSourceInput[] =
-      this.props.singleRelease != null
-        ? this.state.singleEvents
-        : this.props.channels
-            .filter((channel) => this.state.allEvents.has(channel))
-            .map((channel) => this.state.allEvents.get(channel));
-
+    const displayEvents: EventSourceInput[] = this.props.channels
+      .filter((channel) => this.state.events.has(channel))
+      .map((channel) => this.state.events.get(channel));
     return (
       <div className='calendar'>
         <FullCalendar

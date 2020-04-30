@@ -36,13 +36,3 @@ export function getAllReleasesEvents(
   });
   return eventSources;
 }
-
-export function getSingleReleaseEvents(
-  eventInputs: ReleaseEventInput[],
-): EventSourceInput[] {
-  return eventInputs.map(
-    (event: ReleaseEventInput): EventSourceInput => {
-      return {events: [event], textColor: 'white'};
-    },
-  );
-}

@@ -27,7 +27,6 @@ interface ChannelTableState {
 interface ChannelTableProps {
   channels: Channel[];
   handleSelectedChannel: (channel: Channel, checked: boolean) => void;
-  handleSelectedRelease: (release: string) => void;
 }
 
 export class ChannelTable extends React.Component<
@@ -55,10 +54,6 @@ export class ChannelTable extends React.Component<
     event: React.ChangeEvent<HTMLInputElement>,
   ): void => {
     this.props.handleSelectedChannel(channel, event.target.checked);
-  };
-
-  handleReleaseClick = (release: string): void => {
-    this.props.handleSelectedRelease(release);
   };
 
   rows = [
@@ -92,13 +87,7 @@ export class ChannelTable extends React.Component<
                   </div>
                   <div className='row-text'>{row.title}</div>
                 </label>
-                <button
-                  className='release-button'
-                  onClick={(): void =>
-                    this.handleReleaseClick(
-                      this.state.currentReleases.get(row.channel),
-                    )
-                  }>
+                <button className='release-button'>
                   {this.state.currentReleases.get(row.channel)}
                 </button>
               </React.Fragment>

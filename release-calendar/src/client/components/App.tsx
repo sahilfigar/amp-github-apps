@@ -23,7 +23,6 @@ import {Header} from './Header';
 
 interface AppState {
   channels: Channel[];
-  release: string;
 }
 
 export class App extends React.Component<{}, AppState> {
@@ -31,7 +30,6 @@ export class App extends React.Component<{}, AppState> {
     super(props);
     this.state = {
       channels: [],
-      release: null,
     };
   }
 
@@ -40,12 +38,6 @@ export class App extends React.Component<{}, AppState> {
       channels: toChecked
         ? this.state.channels.concat(channel)
         : this.state.channels.filter((item) => channel !== item),
-    });
-  };
-
-  handleSelectedRelease = (selectedRelease: string): void => {
-    this.setState({
-      release: this.state.release != selectedRelease ? selectedRelease : null,
     });
   };
 
@@ -58,14 +50,10 @@ export class App extends React.Component<{}, AppState> {
             <ChannelTable
               channels={this.state.channels}
               handleSelectedChannel={this.handleSelectedChannel}
-              handleSelectedRelease={this.handleSelectedRelease}
             />
           </div>
           <div className='col-calendar'>
-            <Calendar
-              channels={this.state.channels}
-              singleRelease={this.state.release}
-            />
+            <Calendar channels={this.state.channels} />
           </div>
         </div>
       </React.Fragment>
